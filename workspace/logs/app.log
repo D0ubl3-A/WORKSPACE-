@@ -1,0 +1,15 @@
+{"ts":"2025-12-21T19:15:11.571Z","source":"songwriter","level":"info","message":"Songwriter OK"}
+{"ts":"2025-12-21T19:58:40.473Z","source":"e2b","level":"error","message":"Unexpected error in E2B run."}
+{"ts":"2025-12-21T20:08:15.359Z","source":"groq-compound","level":"info","message":"OK chat (llama-3.1-8b-instant)"}
+{"ts":"2025-12-21T20:28:12.465Z","source":"ai-improve","level":"info","message":"chat prompt improved"}
+{"ts":"2025-12-21T20:41:20.286Z","source":"assistant-dock","level":"info","message":"OK (llama-3.1-8b-instant)"}
+{"ts":"2025-12-21T20:41:50.896Z","source":"assistant-dock","level":"info","message":"OK (llama-3.1-8b-instant)"}
+{"ts":"2025-12-21T20:41:59.430Z","source":"assistant-dock","level":"info","message":"OK (llama-3.1-8b-instant)"}
+{"ts":"2025-12-21T20:44:54.937Z","source":"assistant-dock","level":"info","message":"OK (llama-3.1-8b-instant)"}
+{"ts":"2025-12-21T20:49:48.672Z","source":"e2b","level":"error","message":"invalid syntax (2558540688.py, line 6)"}
+{"ts":"2025-12-21T22:33:35.207Z","source":"songwriter","level":"info","message":"Songwriter OK"}
+{"ts":"2025-12-21T22:34:13.642Z","source":"songwriter","level":"info","message":"Songwriter OK"}
+{"ts":"2025-12-21T22:34:23.739Z","source":"suno","level":"error","message":"Missing SUNO_API_KEY"}
+{"ts":"2025-12-21T22:34:55.488Z","source":"songwriter","level":"info","message":"Songwriter OK"}
+{"ts":"2025-12-21T22:35:20.582Z","source":"assistant-dock","level":"info","message":"OK (llama-3.3-70b-versatile)"}
+{"ts":"2025-12-21T22:37:51.864Z","source":"e2b","level":"error","message":"invalid syntax (2832687408.py, line 6)"}
