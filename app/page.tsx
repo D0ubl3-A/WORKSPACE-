@@ -1750,7 +1750,7 @@ User prompt: ${maverickPrompt}
       ? "gpt-oss-120b"
       : "llama-3.1-70b-versatile";
     const model = needsReasoning ? reasoningModel : "llama-3.1-8b-instant";
-    const newHistory = [...chatHistory, { role: "user", content: prompt }];
+    const newHistory: ChatTurn[] = [...chatHistory, makeChatTurn("user", prompt)];
     const payload = {
       model,
       prompt,
@@ -1774,7 +1774,7 @@ User prompt: ${maverickPrompt}
       const assistantContent = data.output || "Received response from Groq compound.";
       setToolOutput(assistantContent);
       queueAutoTts(assistantContent);
-      setChatHistory([...newHistory, { role: "assistant", content: assistantContent }]);
+      setChatHistory([...newHistory, makeChatTurn("assistant", assistantContent)]);
       logEvent({ source: "groq-compound", level: "info", message: `OK chat (${model})` });
       setChatGlow(true);
       setTimeout(() => setChatGlow(false), 1200);
@@ -1786,7 +1786,7 @@ User prompt: ${maverickPrompt}
       const errMsg = message || "Groq compound request error. Ensure /api/groq-compound is implemented.";
       setToolOutput(errMsg);
       queueAutoTts(errMsg);
-      setChatHistory([...newHistory, { role: "assistant", content: errMsg }]);
+      setChatHistory([...newHistory, makeChatTurn("assistant", errMsg)]);
       logEvent({ source: "groq-compound", level: "error", message: errMsg });
       setChatGlow(true);
       setTimeout(() => setChatGlow(false), 1200);
@@ -1798,7 +1798,7 @@ User prompt: ${maverickPrompt}
   const runAssistantDock = async () => {
     const prompt = assistantDockPrompt.trim();
     if (!prompt) return;
-    const history = [...assistantDockHistory, { role: "user", content: prompt }];
+    const history: ChatTurn[] = [...assistantDockHistory, makeChatTurn("user", prompt)];
     setAssistantDockHistory(history);
     setAssistantDockPrompt("");
     setAssistantDockRunning(true);
@@ -1823,12 +1823,12 @@ User prompt: ${maverickPrompt}
         throw new Error(detail);
       }
       const assistantContent = data.output || "Assistant ready.";
-      setAssistantDockHistory((prev) => [...prev, { role: "assistant", content: assistantContent }]);
+      setAssistantDockHistory((prev) => [...prev, makeChatTurn("assistant", assistantContent)]);
       queueAutoTts(assistantContent);
       logEvent({ source: "assistant-dock", level: "info", message: `OK (${model})` });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Assistant agent error.";
-      setAssistantDockHistory((prev) => [...prev, { role: "assistant", content: message }]);
+      setAssistantDockHistory((prev) => [...prev, makeChatTurn("assistant", message)]);
       queueAutoTts(message);
       logEvent({ source: "assistant-dock", level: "error", message });
     } finally {
@@ -1853,7 +1853,9 @@ User prompt: ${maverickPrompt}
     }
     setE2bRunning(true);
     setE2bOutput("");
-    const newHistory = prompt ? [...e2bHistory, { role: "user", content: prompt }] : [...e2bHistory];
+    const newHistory: ChatTurn[] = prompt
+      ? [...e2bHistory, makeChatTurn("user", prompt)]
+      : [...e2bHistory];
     try {
       const res = await fetch("/api/e2b/run", {
         method: "POST",
@@ -1873,7 +1875,7 @@ User prompt: ${maverickPrompt}
       const assistantContent = data.output || "Run completed.";
       setE2bOutput(assistantContent);
       queueAutoTts(assistantContent);
-      setE2bHistory([...newHistory, { role: "assistant", content: assistantContent }]);
+      setE2bHistory([...newHistory, makeChatTurn("assistant", assistantContent)]);
       logEvent({ source: "e2b", level: "info", message: "E2B run OK" });
       setE2bGlow(true);
       setTimeout(() => setE2bGlow(false), 1200);
@@ -1881,7 +1883,7 @@ User prompt: ${maverickPrompt}
       const message = err instanceof Error ? err.message : "E2B run error.";
       setE2bOutput(message);
       queueAutoTts(message);
-      setE2bHistory([...newHistory, { role: "assistant", content: message }]);
+      setE2bHistory([...newHistory, makeChatTurn("assistant", message)]);
       logEvent({ source: "e2b", level: "error", message });
       setE2bGlow(true);
       setTimeout(() => setE2bGlow(false), 1200);
@@ -2813,7 +2815,9 @@ User prompt: ${songAnalysisPrompt}`;
             <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-3 text-sm">
               <p className="text-[11px] uppercase tracking-[0.3em] text-slate-400">Calendar</p>
               <div className="mt-2 space-y-2">
-                {(calendarItems.length ? calendarItems.slice(0, 6) : [{ key: "empty", title: "No events yet", date: "TBD", time: "", owner: "" }]).map((entry) => (
+                {(calendarItems.length
+                  ? calendarItems.slice(0, 6)
+                  : [{ key: "empty", title: "No events yet", date: "TBD", time: "", owner: "", tag: "Info" }]).map((entry) => (
                   <div key={entry.key} className="rounded-xl border border-white/10 bg-slate-950/60 px-3 py-2">
                     <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.2em] text-slate-400">
                       <span>{entry.date || "TBD"}</span>
@@ -3200,7 +3204,9 @@ User prompt: ${songAnalysisPrompt}`;
                   <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-3 text-sm">
                     <p className="text-[11px] uppercase tracking-[0.3em] text-slate-400">Dynamic data outputs</p>
                     <div className="mt-2 grid gap-2 sm:grid-cols-2">
-                      {(calendarItems.length ? calendarItems.slice(0, 2) : [{ key: "dyn-empty", title: "No upcoming items", date: "TBD", time: "", owner: "" }]).map((entry) => (
+                      {(calendarItems.length
+                        ? calendarItems.slice(0, 2)
+                        : [{ key: "dyn-empty", title: "No upcoming items", date: "TBD", time: "", owner: "", tag: "Info" }]).map((entry) => (
                         <div key={entry.key} className="rounded border border-white/10 bg-slate-900/60 px-2 py-2 text-[12px]">
                           <p className="font-semibold text-white">{entry.title}</p>
                           <p className="text-[11px] text-slate-400">
@@ -3235,7 +3241,9 @@ User prompt: ${songAnalysisPrompt}`;
                           </tr>
                         </thead>
                         <tbody>
-                          {(calendarItems.length ? calendarItems : [{ key: "cal-empty", title: "No events yet", date: "TBD", time: "", owner: "" }]).map((entry) => (
+                          {(calendarItems.length
+                            ? calendarItems
+                            : [{ key: "cal-empty", title: "No events yet", date: "TBD", time: "", owner: "", tag: "Info" }]).map((entry) => (
                             <tr key={entry.key} className="border-t border-white/5">
                               <td className="px-2 py-2 text-slate-200">{entry.date || "TBD"}</td>
                               <td className="px-2 py-2 text-slate-300">{entry.time || "—"}</td>
@@ -4018,7 +4026,9 @@ User prompt: ${songAnalysisPrompt}`;
                           </tr>
                         </thead>
                         <tbody>
-                          {(calendarItems.length ? calendarItems : [{ key: "cal-empty", title: "No events yet", date: "TBD", time: "", owner: "" }]).map((entry) => (
+                          {(calendarItems.length
+                            ? calendarItems
+                            : [{ key: "cal-empty", title: "No events yet", date: "TBD", time: "", owner: "", tag: "Info" }]).map((entry) => (
                             <tr key={entry.key} className="border-t border-white/5">
                               <td className="px-2 py-2 text-slate-200">{entry.date || "TBD"}</td>
                               <td className="px-2 py-2 text-slate-300">{entry.time || "—"}</td>
