@@ -1,0 +1,18 @@
+name: CI Episode 3 Assets
+on: push
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch media
+        run: |
+          curl -L --fail "https://northarknow-api-t3ngwy6mea-ue.a.run.app/media/articles/2366.mp4?download=true" -o source.mp4
+          curl -L --fail "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/ece6c9e2-f5e3-4f8d-8bf9-e3fc6cb5e900.mp3" -o narration.mp3
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-ep3-assets
+          path: |
+            source.mp4
+            narration.mp3
+          retention-days: 1
